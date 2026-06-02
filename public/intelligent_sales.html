@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인텔리전트 영업 지원 | 더리치랩(주)</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg-body: #F3F4F6; 
+            --primary-blue: #004AB9; 
+            --text-main: #1F2937; 
+            --text-sub: #4B5563; 
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.05); 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Pretendard', sans-serif; overflow-x: hidden; line-height: 1.6; }
+        
+        header { position: fixed; top: 0; left: 0; width: 100%; height: 80px; padding: 0 5vw; background: rgba(243, 244, 246, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.5); z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--primary-blue); text-decoration: none; letter-spacing: -1px; display: flex; align-items: center; height: 100%; }
+        
+        nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        nav a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.3s; position: relative; }
+        nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background: var(--primary-blue); transition: 0.3s; }
+        nav a:hover::after { width: 100%; }
+        nav a:hover { color: var(--primary-blue); }
+        
+        main { padding-top: 150px; max-width: 1000px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+        
+        .hero-video-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 60px; }
+        .hero-video { width: 100%; max-width: 900px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); object-fit: cover; background-color: #fff; }
+
+        .header-box { text-align: center; margin-bottom: 60px; }
+        .header-box h1 { font-size: 42px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px; }
+        
+        .list-wrap { display: flex; flex-direction: column; gap: 25px; margin-bottom: 80px; }
+        .list-item { background: #fff; padding: 40px; border-radius: 30px; display: flex; align-items: center; gap: 30px; box-shadow: 0 15px 30px rgba(0,0,0,0.03); transition: 0.3s; }
+        .list-item:hover { transform: translateX(20px); border-left: 10px solid var(--primary-blue); }
+        .num { min-width: 60px; height: 60px; border-radius: 50%; background: var(--primary-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; flex-shrink: 0; }
+        
+        /* 반응형 레이아웃 */
+        .item-content { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 30px; }
+        .text { flex: 1; }
+        .text h2 { font-size: 24px; margin-bottom: 8px; color: var(--primary-blue); }
+        .text p { font-size: 16px; color: var(--text-sub); font-weight: 300; }
+        
+        /* 미디어 영역 (배너 + QR) 하단 정렬 통일 */
+        .media-box { display: flex; align-items: flex-end; gap: 15px; flex-shrink: 0; }
+        
+        /* ★ 완벽하게 통일된 QR 코드 스타일 ★ */
+        .qr-code { 
+            width: 110px; 
+            height: 110px; 
+            background: #ffffff; /* 흰색 배경 강제 적용 */
+            padding: 8px; /* 내부 여백 통일 */
+            box-sizing: border-box;
+            border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+            border: 1px solid #f3f4f6; 
+            object-fit: contain; 
+        }
+        
+        /* ★ 1번, 2번 공통 적용: 클릭 가능한 배너 강제 규격화 ★ */
+        .clickable-banner-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 280px;
+            height: 110px; /* QR코드와 세로 길이 똑같이 강제 고정 */
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-sizing: border-box;
+        }
+        .clickable-banner-wrap:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 74, 185, 0.2);
+        }
+        .clickable-banner-wrap img.banner-img {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .clickable-banner-wrap:hover img.banner-img {
+            transform: scale(1.03);
+        }
+        
+        /* 1번 배너 속성: 여백을 남기고 중앙 정렬 */
+        .clickable-banner-wrap.ci-banner img.banner-img {
+            object-fit: contain;
+            padding: 15px; 
+        }
+        /* 2번 배너 속성: 빈틈없이 꽉 채우기 */
+        .clickable-banner-wrap.full-banner img.banner-img {
+            object-fit: cover; 
+        }
+
+        .click-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 74, 185, 0.95);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+        }
+        
+        .link-buttons { margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .link-buttons a { display: inline-flex; align-items: center; padding: 8px 16px; background: rgba(0,74,185,0.05); color: var(--primary-blue); font-size: 14px; font-weight: 700; border-radius: 8px; text-decoration: none; transition: 0.3s; border: 1px solid transparent; }
+        .link-buttons a:hover { background: var(--primary-blue); color: #fff; transform: translateY(-2px); border-color: var(--primary-blue); }
+
+        .slogan { text-align: center; padding: 60px; background: #fff; border-radius: 40px; box-shadow: 0 30px 50px rgba(0,74,185,0.05); margin-bottom: 60px; }
+        .slogan h3 { font-size: 32px; font-weight: 900; line-height: 1.5; color: #000; margin: 0; }
+        .slogan span { color: var(--primary-blue); }
+
+        footer { background-color: #111827; color: #9CA3AF; padding: 60px 5vw 40px; font-size: 14px; line-height: 1.8; word-break: keep-all; }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; gap: 25px; margin-bottom: 30px; flex-wrap: wrap; border-bottom: 1px solid #374151; padding-bottom: 20px; }
+        .footer-links a { color: #D1D5DB; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-links a.privacy { font-weight: 900; color: #60A5FA; }
+        .footer-info { margin-bottom: 25px; }
+        .footer-info .company-name { font-size: 18px; font-weight: 700; color: #fff; display: block; margin-bottom: 10px; }
+        .footer-info span { display: inline-block; margin-right: 15px; }
+        .footer-info span::after { content: '|'; margin-left: 15px; color: #4B5563; }
+        .footer-info span:last-child::after, .footer-info br + span::after { content: ''; margin-left: 0; }
+        .footer-disclaimer { font-size: 13px; color: #6B7280; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 25px; }
+        .footer-copyright { color: #6B7280; font-size: 13px; }
+
+        @media (max-width: 992px) {
+            header { height: auto; flex-direction: column; padding: 15px 5vw; gap: 10px; justify-content: center; }
+            .logo { height: 40px; justify-content: center; }
+            nav ul { justify-content: center; flex-wrap: wrap; gap: 15px; }
+            .clickable-banner-wrap { width: 230px; height: 95px; } 
+            .qr-code { width: 95px; height: 95px; } 
+        }
+        @media (max-width: 768px) {
+            .list-item { flex-direction: column; text-align: center; gap: 20px; padding: 30px; }
+            .list-item:hover { transform: translateY(-10px); border-left: none; border-top: 10px solid var(--primary-blue); }
+            
+            /* 모바일 대응 레이아웃 세로 정렬 시에도 크기 유지되도록 세팅 */
+            .item-content { flex-direction: column; text-align: center; gap: 20px; }
+            .media-box { flex-direction: column; align-items: center; width: 100%; gap: 15px; }
+            .clickable-banner-wrap { width: 100%; max-width: 280px; height: 110px; }
+            .qr-code { width: 100px; height: 100px; }
+
+            .footer-info span { display: block; margin-right: 0; margin-bottom: 5px; }
+            .footer-info span::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a href="index.html" class="logo">더리치랩(주)</a>
+    <nav>
+        <ul>
+            <li><a href="myfc.html">MyFC 플랫폼</a></li>
+            <li><a href="enterprise.html">엔터프라이즈 전산</a></li>
+            <li><a href="intelligent_sales.html" style="color:var(--primary-blue)">인텔리전트 영업 지원</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <div class="hero-video-container" data-aos="zoom-in">
+        <video class="hero-video" autoplay loop muted playsinline>
+            <source src="인텔리전트 영업지원_2.mp4" type="video/mp4">
+            브라우저가 비디오 태그를 지원하지 않습니다.
+        </video>
+    </div>
+    
+    <div class="header-box" data-aos="fade-down">
+        <h1>인텔리전트 영업 지원</h1>
+        <p>설계사의 생산성을 극대화하는 자동화 에코시스템</p>
+    </div>
+    
+    <div class="list-wrap">
+        <div class="list-item" data-aos="fade-right">
+            <div class="num">1</div>
+            <div class="item-content">
+                <div class="text">
+                    <h2>보험사 전산 및 고객센터 통합 포털 운영</h2>
+                    <p>보험설계사님을 위한 완벽한 보험사 전산 및 고객센터 통합 업무지원 포털 운영합니다.</p>
+                </div>
+                <div class="media-box">
+                    <a href="https://portal.myfc.kr/" target="_blank" class="clickable-banner-wrap ci-banner">
+                        <img src="PORTAL MyFC CI.png" alt="MyFC 포털 배너 클릭" class="banner-img">
+                        <div class="click-badge">👆 클릭하여 입장</div>
+                    </a>
+                    <img src="portal.myfc.kr_QR.png" alt="포털 접속 QR코드" class="qr-code">
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item" data-aos="fade-right" data-aos-delay="100">
+            <div class="num">2</div>
+            <div class="item-content">
+                <div class="text">
+                    <h2>영업 생산성 툴 (SSS)</h2>
+                    <p>매일 새로운 영업 툴과 상담 자료를 제공하여 설계사의 물리적 준비 시간을 획기적으로 줄여줍니다.</p>
+                </div>
+                <div class="media-box">
+                    <a href="https://open.kakao.com/o/gI44zWqi" target="_blank" class="clickable-banner-wrap full-banner">
+                        <img src="SSS_IMG.png" alt="SSS 커뮤니티 배너 클릭" class="banner-img">
+                        <div class="click-badge">👆 클릭하여 입장</div>
+                    </a>
+                    <img src="SSS_QR.jpg" alt="SSS 접속 QR코드" class="qr-code">
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item" data-aos="fade-right" data-aos-delay="200">
+            <div class="num">3</div>
+            <div class="item-content">
+                <div class="text">
+                    <h2>지능형 고객 관리 (CRM)</h2>
+                    <p>알고리즘이 생일, 보장 만기, 실효 예고 시점에 맞춰 설계사 명의의 맞춤형 메시지를 자동 발송합니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item" data-aos="fade-right" data-aos-delay="300">
+            <div class="num">4</div>
+            <div class="item-content">
+                <div class="text">
+                    <h2>행정 비서 자동화</h2>
+                    <p>콜센터 운영, 우편물 스캔 클라우드 업로드, 스케줄링 등 모든 물리적 잡무를 대행합니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slogan" data-aos="zoom-in">
+        <h3>"설계사님은 <span>높은 소득</span>에만 집중하십시오.<br>복잡한 잡일은 모두 <span>더리치랩(주)</span>에 맡기세요."</h3>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">회사소개</a>
+            <a href="#">이용약관</a>
+            <a href="#" class="privacy">개인정보처리방침</a>
+            <a href="#">고객센터</a>
+        </div>
+        
+        <div class="footer-info">
+            <span class="company-name">(주)더리치랩</span><br>
+            <span>대표이사 : 박영진</span>
+            <span>주소 : 서울특별시 강남구 테헤란로 507, 8층 131호</span><br>
+            <span>사업자등록번호 : 762-88-02797 <a href="http://www.ftc.go.kr/bizCommPop.do?wrkr_no=7628802797" target="_blank" style="color:#60A5FA; text-decoration:none; font-size:13px; margin-left: 5px;">사업자 정보확인 ↗</a></span>
+            <span>통신판매업신고 : 제 2025-서울강남-06308호</span><br>
+            <span>대표번호 : 010-9941-2899</span>
+            <span>E-mail : myfc.helpdesk@gmail.com</span>
+            <span>호스팅서비스사업자 : (이용중인 호스팅사 기재, 예: 아임웹/AWS)</span>
+        </div>
+        
+        <div class="footer-disclaimer">
+            본 사이트(MyFC 포함)는 데이터 중심 보험 설계사 매칭 플랫폼(통신판매중개)으로, 통신판매의 당사자가 아닙니다. 
+            따라서 개별 설계사가 등록한 상품 정보, 상담 및 거래에 대하여 (주)더리치랩은 일체의 법적 책임을 지지 않습니다. 
+            <a href="#" style="color:#9CA3AF; text-decoration:underline;">소비자분쟁해결기준</a>
+        </div>
+        
+        <div class="footer-copyright">
+            Copyright © 2026 TheRichLab Corp. All Rights Reserved.
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init({ once: true });</script>
+</body>
+</html>

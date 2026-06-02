@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>엔터프라이즈 전산 | 더리치랩(주)</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg-body: #F3F4F6; 
+            --primary-blue: #004AB9; 
+            --text-main: #1F2937; 
+            --text-sub: #4B5563; 
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.05); 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-body); color: var(--text-main); font-family: 'Pretendard', sans-serif; overflow-x: hidden; line-height: 1.6; }
+        
+        header { position: fixed; top: 0; left: 0; width: 100%; height: 80px; padding: 0 5vw; background: rgba(243, 244, 246, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.5); z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--primary-blue); text-decoration: none; letter-spacing: -1px; display: flex; align-items: center; height: 100%; }
+        
+        nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        nav a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.3s; position: relative; }
+        nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background: var(--primary-blue); transition: 0.3s; }
+        nav a:hover::after { width: 100%; }
+        nav a:hover { color: var(--primary-blue); }
+        
+        main { padding-top: 150px; max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+        
+        .hero-video-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 60px; }
+        .hero-video { width: 100%; max-width: 900px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); object-fit: cover; background-color: #0f172a; }
+
+        .title-area { text-align: center; margin-bottom: 80px; }
+        .title-area h1 { font-size: 48px; font-weight: 900; color: var(--primary-blue); margin-bottom: 20px; }
+        
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .tech-card { background: #fff; padding: 40px; border-radius: 30px; box-shadow: var(--card-shadow); border-left: 8px solid var(--primary-blue); transition: 0.3s; }
+        .tech-card:hover { transform: translateY(-10px); background: var(--primary-blue); }
+        .tech-card:hover h3, .tech-card:hover p { color: #fff; }
+        .tech-card h3 { font-size: 22px; margin-bottom: 15px; color: var(--primary-blue); }
+        .tech-card p { font-size: 15px; color: var(--text-sub); font-weight: 300; }
+        
+        footer { background-color: #111827; color: #9CA3AF; padding: 60px 5vw 40px; font-size: 14px; line-height: 1.8; word-break: keep-all; }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; gap: 25px; margin-bottom: 30px; flex-wrap: wrap; border-bottom: 1px solid #374151; padding-bottom: 20px; }
+        .footer-links a { color: #D1D5DB; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-links a.privacy { font-weight: 900; color: #60A5FA; }
+        .footer-info { margin-bottom: 25px; }
+        .footer-info .company-name { font-size: 18px; font-weight: 700; color: #fff; display: block; margin-bottom: 10px; }
+        .footer-info span { display: inline-block; margin-right: 15px; }
+        .footer-info span::after { content: '|'; margin-left: 15px; color: #4B5563; }
+        .footer-info span:last-child::after, .footer-info br + span::after { content: ''; margin-left: 0; }
+        .footer-disclaimer { font-size: 13px; color: #6B7280; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 25px; }
+        .footer-copyright { color: #6B7280; font-size: 13px; }
+
+        @media (max-width: 992px) {
+            header { height: auto; flex-direction: column; padding: 15px 5vw; gap: 10px; justify-content: center; }
+            .logo { height: 40px; justify-content: center; }
+            nav ul { justify-content: center; flex-wrap: wrap; gap: 15px; }
+        }
+        @media (max-width: 768px) {
+            .footer-info span { display: block; margin-right: 0; margin-bottom: 5px; }
+            .footer-info span::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a href="index.html" class="logo">더리치랩(주)</a>
+    <nav>
+        <ul>
+            <li><a href="myfc.html">MyFC 플랫폼</a></li>
+            <li><a href="enterprise.html" style="color:var(--primary-blue)">엔터프라이즈 전산</a></li>
+            <li><a href="intelligent_sales.html">인텔리전트 영업 지원</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <div class="hero-video-container" data-aos="zoom-in">
+        <video class="hero-video" autoplay loop muted playsinline>
+            <source src="Web Agency.mp4" type="video/mp4">
+            브라우저가 비디오 태그를 지원하지 않습니다.
+        </video>
+    </div>
+
+    <div class="title-area" data-aos="fade-up">
+        <h1>대규모 전산 개발 사업</h1>
+        <p>클라이언트사에 최적화된 업계 최고 수준의 홈페이지, 웹, 앱 개발, 전산망 구축. <br>전문 인력의 기획력과 AI 기술이 만나 가장 안전하고 최고의 전산망을 창조합니다.</p>
+    </div>
+    
+    <div class="grid-cards">
+        <div class="tech-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>기업형 홈페이지, 웹 개발, 유지, 관리</h3>
+            <p>클라이언트사에 최적화된 업계 최고 수준의 홈페이지, 웹 구축을 보장합니다.</p>
+        </div>
+        <div class="tech-card" data-aos="fade-up" data-aos-delay="200">
+            <h3>android & iOS APP 개발, 유지, 관리</h3>
+            <p>클라이언트사에 최적화된 업계 최고 수준의 android & iOS APP 구축을 보장합니다.</p>
+        </div>
+        <div class="tech-card" data-aos="fade-up" data-aos-delay="300">
+            <h3>검증된 MyFC 웹, android & iOS APP</h3>
+            <p>MyFC 웹, android & iOS APP을 개발, 유지, 관리하고 있는 경험으로 클라이언트사에게 만족도 높은 서비스를 제공합니다.</p>
+        </div>
+    </div>
+
+    <div class="grid-cards">
+        <div class="tech-card" data-aos="fade-up" data-aos-delay="100">
+            <h3>최정예 기획 인력</h3>
+            <p>국내 최대 GA의 전산 기획 총괄 출신 인력을 영입하여 보험 비즈니스 로직에 최적화된 설계를 보장합니다.</p>
+        </div>
+        <div class="tech-card" data-aos="fade-up" data-aos-delay="200">
+            <h3>대규모 시스템 구축</h3>
+            <p>수만 명의 설계사가 동시에 사용하는 복합 수당 정산, 고객 DB 유통, 가입설계 연동 시스템을 자체 개발합니다.</p>
+        </div>
+        <div class="tech-card" data-aos="fade-up" data-aos-delay="300">
+            <h3>완벽한 보안 및 규제</h3>
+            <p>금소법 준수 로직과 강력한 개인정보 보호(ISMS 기준) 체계가 집약된 차세대 엔터프라이즈 솔루션을 제공합니다.</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">회사소개</a>
+            <a href="#">이용약관</a>
+            <a href="#" class="privacy">개인정보처리방침</a>
+            <a href="#">고객센터</a>
+        </div>
+        
+        <div class="footer-info">
+            <span class="company-name">더리치랩(주)</span><br>
+            <span>대표이사 : 박영진</span>
+            <span>주소 : 서울특별시 강남구 테헤란로 507, 8층 131호</span><br>
+            <span>사업자등록번호 : 762-88-02797 <a href="http://www.ftc.go.kr/bizCommPop.do?wrkr_no=7628802797" target="_blank" style="color:#60A5FA; text-decoration:none; font-size:13px; margin-left: 5px;">사업자 정보확인 ↗</a></span>
+            <span>통신판매업신고 : 제 2025-서울강남-06308호</span><br>
+            <span>대표번호 : 010-9941-2899</span>
+            <span>E-mail : myfc.helpdesk@gmail.com</span>
+            <span>호스팅서비스사업자 : 카페24(주)</span>
+        </div>
+        
+        <div class="footer-disclaimer">
+            본 사이트(MyFC 포함)는 데이터 중심 보험 설계사 매칭 플랫폼(통신판매중개)으로, 통신판매의 당사자가 아닙니다. 
+            따라서 개별 설계사가 등록한 상품 정보, 상담 및 거래에 대하여 (주)더리치랩은 일체의 법적 책임을 지지 않습니다. 
+            <a href="#" style="color:#9CA3AF; text-decoration:underline;">소비자분쟁해결기준</a>
+        </div>
+        
+        <div class="footer-copyright">
+            Copyright © 2026 TheRichLab Corp. All Rights Reserved.
+        </div>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init();</script>
+</body>
+</html>

@@ -1,699 +1,311 @@
 <!DOCTYPE html>
-<html lang="ko" class="scroll-smooth">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>더리치랩 (주) - 초격차 보험설계사 B2B 플랫폼</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f4f6f8',
-                            100: '#e2e8f0',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            800: '#1e3a8a',
-                            900: '#0f172a', // Deep Slate for premium corporate feel
-                        },
-                        gold: {
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['"Pretendard"', '"Noto Sans KR"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <title>더리치랩(주) | 하이엔드 금융 플랫폼</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; }
+        :root {
+            --bg-body: #F3F4F6;
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --primary-blue: #004AB9; 
+            --accent-blue: #2563EB;
+            --accent-purple: #8B5CF6;
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-main: #1F2937;
+            --text-sub: #4B5563;
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; padding: 0; background-color: var(--bg-body); color: var(--text-main);
+            font-family: 'Pretendard', sans-serif; overflow-x: hidden; line-height: 1.6; word-break: keep-all;
+            background: linear-gradient(-45deg, #F3F4F6, #E5E7EB, #F9FAFB, #F3F4F6);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .particle { position: absolute; border-radius: 50%; background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(139,92,246,0.1)); animation: floatUp 20s infinite linear; }
+        @keyframes floatUp { 0% { transform: translateY(100vh) scale(0); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.5); opacity: 0; } }
+
+        header { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px; 
+            padding: 0 5vw; background: rgba(243, 244, 246, 0.85); 
+            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.5); 
+            z-index: 1000; display: flex; justify-content: space-between; align-items: center; 
+        }
         
-        /* Required Chart Container Styling */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
-        }
-
-        /* Custom UI Elements */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+        .logo { font-size: 24px; font-weight: 900; color: var(--primary-blue); text-decoration: none; letter-spacing: -1px; display: flex; align-items: center; height: 100%; }
         
-        .gradient-text {
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        nav a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.3s; position: relative; }
+        nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background: var(--accent-blue); transition: 0.3s; }
+        nav a:hover::after { width: 100%; }
+        nav a:hover { color: var(--accent-blue); }
 
-        .tab-btn.active {
-            background-color: #0f172a;
-            color: white;
-            border-color: #0f172a;
-        }
+        .btn-primary { display: inline-block; padding: 15px 35px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue)); color: #fff; border-radius: 30px; font-weight: 700; font-size: 16px; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2); text-decoration: none; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3); }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .hero { height: 100vh; min-height: 800px; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 0 5vw; max-width: 1600px; margin: 0 auto; }
+        .hero-text h1 { font-size: clamp(40px, 5vw, 65px); font-weight: 900; line-height: 1.2; margin-bottom: 25px; color: var(--primary-blue); letter-spacing: -2px; }
+        .hero-text h1 span { background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-text p { font-size: clamp(16px, 1.5vw, 20px); color: var(--text-sub); max-width: 500px; margin-bottom: 40px; font-weight: 300; }
+
+        .hero-3d { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; perspective: 1500px; }
+        .iso-container { position: relative; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(60deg) rotateZ(-45deg); animation: floatIso 6s ease-in-out infinite; }
+        @keyframes floatIso { 0%, 100% { transform: rotateX(60deg) rotateZ(-45deg) translateY(0); } 50% { transform: rotateX(60deg) rotateZ(-45deg) translateY(-30px); } }
+        .iso-layer { position: absolute; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.4); border: 2px solid rgba(255,255,255,0.8); border-radius: 20px; backdrop-filter: blur(5px); box-shadow: -15px 15px 30px rgba(0,0,0,0.05); transition: 0.5s; }
+        .iso-layer:nth-child(1) { transform: translateZ(0px); }
+        .iso-layer:nth-child(2) { transform: translateZ(60px); background: rgba(37,99,235,0.1); }
+        .iso-layer:nth-child(3) { transform: translateZ(120px); background: rgba(139,92,246,0.1); display:flex; justify-content:center; align-items:center;}
+        .iso-layer:nth-child(3)::after { content: 'THE RICH LAB'; transform: rotateX(-90deg) rotateY(0deg) rotateZ(45deg); font-weight: 900; font-size: 30px; color: var(--primary-blue); }
+        .iso-container:hover .iso-layer:nth-child(2) { transform: translateZ(90px); }
+        .iso-container:hover .iso-layer:nth-child(3) { transform: translateZ(180px); }
+
+        .bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 100px 5vw; max-width: 1400px; margin: 0 auto; }
+        .glass-card { background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 30px; padding: 40px; box-shadow: var(--card-shadow); backdrop-filter: blur(20px); transform-style: preserve-3d; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .glass-card:hover { transform: translateY(-10px) rotateX(5deg) rotateY(-5deg); box-shadow: -10px 20px 40px rgba(37, 99, 235, 0.1); border-color: rgba(37, 99, 235, 0.3); }
+        .glass-card h2 { font-size: 24px; color: var(--primary-blue); margin-bottom: 15px; }
+        .glass-card p { margin-bottom: 25px; color: var(--text-sub); }
+        .glass-card .num { font-size: 50px; font-weight: 900; color: rgba(37,99,235,0.1); position: absolute; top: 20px; right: 30px; }
+
+        .contact-section { padding: 100px 5vw; background: #fff; text-align: center; border-radius: 50px 50px 0 0; box-shadow: 0 -20px 50px rgba(0,0,0,0.02); }
+        .contact-section h2 { font-size: 36px; color: var(--primary-blue); margin-bottom: 20px; }
+        .form-container { max-width: 600px; margin: 0 auto; text-align: left; background: var(--bg-body); padding: 50px; border-radius: 30px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-main); }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 15px; border: 1px solid #d1d5db; border-radius: 15px; font-size: 16px; font-family: 'Pretendard', sans-serif; transition: 0.3s; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        footer { background-color: #111827; color: #9CA3AF; padding: 60px 5vw 40px; font-size: 14px; line-height: 1.8; word-break: keep-all; }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; gap: 25px; margin-bottom: 30px; flex-wrap: wrap; border-bottom: 1px solid #374151; padding-bottom: 20px; }
+        .footer-links a { color: #D1D5DB; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-links a.privacy { font-weight: 900; color: #60A5FA; }
+        .footer-info { margin-bottom: 25px; }
+        .footer-info .company-name { font-size: 18px; font-weight: 700; color: #fff; display: block; margin-bottom: 10px; }
+        .footer-info span { display: inline-block; margin-right: 15px; }
+        .footer-info span::after { content: '|'; margin-left: 15px; color: #4B5563; }
+        .footer-info span:last-child::after, .footer-info br + span::after { content: ''; margin-left: 0; }
+        .footer-disclaimer { font-size: 13px; color: #6B7280; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 25px; }
+        .footer-copyright { color: #6B7280; font-size: 13px; }
+
+        @media (max-width: 992px) {
+            header { height: auto; flex-direction: column; padding: 15px 5vw; gap: 10px; justify-content: center; }
+            .logo { height: 40px; justify-content: center; }
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 140px; height: auto; }
+            .hero-text p { margin: 0 auto 40px; }
+            .hero-3d { height: 60vh; }
+            nav ul { justify-content: center; flex-wrap: wrap; gap: 15px; }
+        }
+        @media (max-width: 768px) {
+            .footer-info span { display: block; margin-right: 0; margin-bottom: 5px; }
+            .footer-info span::after { display: none; }
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased">
+<body>
 
-    <!-- REQUIRED PLACEHOLDER COMMENTS -->
-    <!-- Chosen Palette: Deep Slate (Corporate Trust), Royal Blue (Technology/Finance), Gold (Wealth/Premium) -->
-    <!-- Application Structure Plan: 
-         1. Hero: Introduces the core philosophy (Time & Tax Leverage).
-         2. Problem (Market Context): Explains the structural limit of GA agents and the tax trap.
-         3. Ecosystem (3 Pillars): Interactive Tabs (Secretary, CRM/AI, MyFC Platform) to organize dense operational details cleanly.
-         4. Tax Strategy (The Core Pitch): An interactive calculator showing exact tax savings based on real tax brackets, proving the ROI.
-         5. Financials & Growth: Chart.js Doughnut visualizing the diversified revenue streams (Subscriptions, CPC/RTB, DB Sales).
-         6. Infrastructure: Briefly touching WeWork & Security to build trust. -->
-    <!-- Visualization & Content Choices: 
-         - Ecosystem Details: Tabbed Interface (JS). Goal: Prevent text fatigue while containing all API, AI tool, and platform BM details.
-         - MyFC Platform UI Mock: CSS Grid/Flex. Goal: Visually explain the RTB/CPC model without an actual app.
-         - Tax Calculator: Dynamic JS Sliders. Goal: Make the abstract "tax benefit" highly personal and concrete for high-earning agents.
-         - Revenue Streams: Chart.js Doughnut. Goal: Show investors/partners that revenue is robust and multi-faceted. No SVG used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. Using pure HTML/CSS/JS and Unicode icons. -->
+<div class="particles" id="particles"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full glass-panel z-50 border-b border-slate-200 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="font-black text-2xl tracking-tighter text-brand-900 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    THE RICH LAB.
-                </div>
-                <div class="hidden md:flex space-x-8 text-sm font-bold text-slate-600">
-                    <a href="#context" class="hover:text-brand-600 transition-colors">시장 환경</a>
-                    <a href="#ecosystem" class="hover:text-brand-600 transition-colors">3대 핵심 비즈니스</a>
-                    <a href="#tax-leverage" class="hover:text-brand-600 transition-colors">조세 레버리지(절세)</a>
-                    <a href="#financials" class="hover:text-brand-600 transition-colors">수익 모델</a>
-                </div>
-                <div>
-                    <a href="#contact" class="bg-brand-900 text-white px-5 py-2 rounded-md font-bold text-sm hover:bg-brand-800 transition-colors">도입 문의</a>
-                </div>
-            </div>
-        </div>
+<header>
+    <a href="index.html" class="logo">더리치랩(주)</a>
+    <nav>
+        <ul>
+            <li><a href="myfc.html">MyFC 플랫폼</a></li>
+            <li><a href="enterprise.html">엔터프라이즈 전산</a></li>
+            <li><a href="intelligent_sales.html">인텔리전트 영업 지원</a></li>
+        </ul>
     </nav>
+</header>
 
-    <!-- Hero Section -->
-    <header class="pt-32 pb-24 bg-brand-900 text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-500 via-brand-900 to-black"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="max-w-3xl">
-                <div class="inline-block px-3 py-1 mb-6 rounded-full border border-brand-500 text-brand-100 text-xs font-bold tracking-widest uppercase">
-                    B2B InsurTech Ecosystem
-                </div>
-                <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6">
-                    고소득 설계사의 <span class="text-gold-500">시간</span>을 <span class="text-gold-500">창조</span>하고<br>
-                    강력한 <span class="text-brand-500">절세 방패</span>를 제공합니다.
-                </h1>
-                <p class="text-lg md:text-xl text-slate-300 leading-relaxed mb-10 font-light">
-                    MDRT, COT급 고능률 보험설계사를 위한 완벽한 후방 지원 시스템.<br>
-                    프리미엄 비서, AI 기반 CRM, 그리고 금소법을 우회하는 독자적 매칭 플랫폼 MyFC까지.<br>
-                    <strong class="text-white font-bold">합법적 100% 비용처리</strong>로 세금을 줄이고, 오직 영업에만 집중하십시오.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#ecosystem" class="bg-brand-600 hover:bg-brand-500 text-white px-8 py-4 rounded-lg font-bold transition-colors">핵심 솔루션 보기</a>
-                    <a href="#tax-leverage" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-4 rounded-lg font-bold transition-colors">절세액 계산하기</a>
-                </div>
-            </div>
+<main>
+    <section class="hero">
+        <div class="hero-text" data-aos="fade-right" data-aos-duration="1500">
+            <h1>금융과 IT 기술의<br><span>차세대 입체적 융합</span></h1>
+            <p>정보 비대칭을 파괴합니다. 첨단 데이터 알고리즘과 최고급 IT 기술력을 집약하여 설계사와 고객 모두가 상생하는 압도적 디지털 혁신을 경험하세요.</p>
+            <a href="#projects" class="btn-primary" style="margin-right: 10px; margin-bottom: 10px;">사업 영역 살펴보기</a>
+            <a href="#contact" class="btn-primary" style="margin-bottom: 10px;">프로젝트 상담 요청</a>
         </div>
-    </header>
 
-    <!-- Problem & Context Section -->
-    <section id="context" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-black text-slate-900 mb-4">구조적 모순에 빠진 보험 시장</h2>
-                <p class="text-slate-600">더리치랩 (주)은 고소득 설계사들이 직면한 다중적 고충을 근본적으로 해결합니다.</p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Pain point 1 -->
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
-                    <div class="text-4xl mb-4">⏳</div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-3">물리적 시간의 한계</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        계약 유지, 실효 방지, 보장 분석, 가입설계서 작성 등 파편화된 비서 업무에 에너지를 소모. 던바의 수(Dunbar's number)를 넘어서는 수백 명의 고객 관리는 수기 방식(엑셀)으로 한계에 봉착하여 영업 생산성을 저하시킵니다.
-                    </p>
-                </div>
-                <!-- Pain point 2 -->
-                <div class="bg-red-50 p-8 rounded-2xl border border-red-100">
-                    <div class="text-4xl mb-4">💸</div>
-                    <h3 class="text-xl font-bold text-red-900 mb-3">살인적인 조세 부담</h3>
-                    <p class="text-red-700 text-sm leading-relaxed">
-                        연 7,500만 원 이상의 기준경비율/복식부기 대상 고능률 설계사들은 최고 45%의 누진세율을 적용받습니다. 그러나 증빙 가능한 필요경비(식대, 유류비 등)는 턱없이 부족하여 소득의 절반을 세금으로 납부하는 가혹한 현실에 놓여있습니다.
-                    </p>
-                </div>
-                <!-- Pain point 3 -->
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
-                    <div class="text-4xl mb-4">⚖️</div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-3">금소법 규제와 플랫폼 한계</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        2021년 금융소비자보호법 시행으로, 플랫폼이 보험 상품을 비교·추천하고 수수료를 분배받는 기존의 인슈어테크 모델은 '불법 중개'로 철퇴를 맞았습니다. 합법적이면서도 강력한 새로운 가망 고객 발굴(DB) 채널이 부재한 상황입니다.
-                    </p>
-                </div>
+        <div class="hero-3d" data-aos="fade-left" data-aos-duration="1500" data-aos-delay="300">
+            <div class="iso-container">
+                <div class="iso-layer"></div>
+                <div class="iso-layer"></div>
+                <div class="iso-layer"></div>
             </div>
         </div>
     </section>
 
-    <!-- Core Ecosystem (Interactive Tabs) -->
-    <section id="ecosystem" class="py-20 bg-slate-900 text-slate-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-12">
-                <span class="text-brand-500 font-bold tracking-widest text-sm uppercase">The 3 Pillars</span>
-                <h2 class="text-3xl font-black text-white mt-2 mb-4">더리치랩 (주) 핵심 비즈니스 생태계</h2>
-                <p class="text-slate-400">방어전(업무 효율 및 고객 관리)과 공격전(가망 고객 창출)을 완벽히 아우르는 솔루션</p>
-            </div>
-
-            <!-- Tab Controls -->
-            <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-700 pb-4">
-                <button onclick="switchPillar('sec')" id="btn-sec" class="tab-btn active px-6 py-3 rounded-t-lg font-bold border border-b-0 border-slate-700 transition-colors hover:bg-slate-800 hover:text-white">
-                    1. 프리미엄 비서 지원
-                </button>
-                <button onclick="switchPillar('crm')" id="btn-crm" class="tab-btn px-6 py-3 rounded-t-lg font-bold border border-slate-700 text-slate-400 bg-slate-800 transition-colors hover:bg-slate-700 hover:text-white">
-                    2. 데이터 CRM & AI 툴
-                </button>
-                <button onclick="switchPillar('myfc')" id="btn-myfc" class="tab-btn px-6 py-3 rounded-t-lg font-bold border border-slate-700 text-slate-400 bg-slate-800 transition-colors hover:bg-slate-700 hover:text-white">
-                    3. 매칭 플랫폼 [MyFC]
-                </button>
-            </div>
-
-            <!-- Tab Content 1: Secretary -->
-            <div id="content-sec" class="tab-content block animate-[fadeIn_0.5s_ease-in-out]">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-6">대형 법인 임원급 비서 서비스를<br>구독 형태로 누리다</h3>
-                        <ul class="space-y-6">
-                            <li class="flex gap-4">
-                                <div class="bg-brand-900 p-3 rounded text-brand-500 text-xl h-fit border border-brand-800">📞</div>
-                                <div>
-                                    <strong class="text-white block mb-1">010 직통 번호 & 통신 라우팅</strong>
-                                    <p class="text-sm">설계사 전용 번호 부여. 전문 CS 비서가 1차 수신하여 단순 문의(주소변경, 청구절차)를 필터링하고, 신규 계약 등 중요 건만 실시간 전환.</p>
-                                </div>
-                            </li>
-                            <li class="flex gap-4">
-                                <div class="bg-brand-900 p-3 rounded text-brand-500 text-xl h-fit border border-brand-800">🏢</div>
-                                <div>
-                                    <strong class="text-white block mb-1">위워크(WeWork) 물류 거점</strong>
-                                    <p class="text-sm">삼성역 1호점 등 핵심 인프라를 베이스캠프로 활용. 원수사 우편물 수령, 중요 서류 즉시 고해상도 스캔 및 클라우드 업로드 대행.</p>
-                                </div>
-                            </li>
-                            <li class="flex gap-4">
-                                <div class="bg-brand-900 p-3 rounded text-brand-500 text-xl h-fit border border-brand-800">📄</div>
-                                <div>
-                                    <strong class="text-white block mb-1">스마트 스케줄링 & 가입설계 보조</strong>
-                                    <p class="text-sm">구글 캘린더 연동 고객 미팅 조율. 현장에서 메신저로 조건 지시 시, 오피스 지원 인력이 즉각 가입설계서(PDF) 생성 후 발송.</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-600 blur-3xl opacity-20"></div>
-                        <div class="text-center mb-6">
-                            <div class="inline-block bg-slate-900 px-4 py-2 rounded-full text-xs font-bold text-slate-300 border border-slate-700">실시간 비서 라우팅 프로세스</div>
-                        </div>
-                        <div class="space-y-3 font-mono text-sm">
-                            <div class="bg-slate-900 p-3 rounded border-l-2 border-slate-500">📥 고객 수신 전화 (010-XXXX-XXXX)</div>
-                            <div class="text-center text-slate-500">↓</div>
-                            <div class="bg-brand-900/50 p-3 rounded border-l-2 border-brand-500 text-brand-100">👩‍💼 더리치랩 (주) 비서: "김설계 대표님 비서입니다."</div>
-                            <div class="flex gap-4 justify-center py-2">
-                                <div class="text-slate-500 text-xs text-right">단순 문의 ↙</div>
-                                <div class="text-gold-500 text-xs text-left">↘ 중요 상담(신규/해약)</div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="bg-slate-900 p-3 rounded border border-slate-700 text-center text-xs">비서 즉시 해결<br>(약관 발송 등)</div>
-                                <div class="bg-gold-900/30 p-3 rounded border border-gold-700 text-center text-gold-300 text-xs">설계사 즉시 콜 전환<br>or 카카오톡 알림</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab Content 2: CRM & AI -->
-            <div id="content-crm" class="tab-content hidden animate-[fadeIn_0.5s_ease-in-out]">
-                <div class="grid md:grid-cols-2 gap-12 items-start">
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-6">데이터와 AI로 무장한<br>영업 무기화 시스템</h3>
-                        <p class="mb-6 text-sm">박영진 대표의 구글 워크스페이스 기반 노하우를 엔터프라이즈급 API 클라우드로 고도화. 자동화된 타겟 마케팅을 실현합니다.</p>
-                        
-                        <div class="bg-slate-800 p-5 rounded-lg border border-slate-700 mb-6">
-                            <h4 class="font-bold text-gold-400 mb-2 flex items-center gap-2"><span>🎁</span> 폐쇄형 맞춤 선물 쇼핑몰 (Gift Concierge)</h4>
-                            <p class="text-sm mb-2">오직 구독 설계사만 이용 가능한 화이트라벨링 쇼핑몰.</p>
-                            <ul class="text-xs space-y-1 text-slate-400">
-                                <li>• <strong>가치 은닉:</strong> 발송인을 더리치랩 (주)이 아닌 '설계사 본인'으로 인쇄.</li>
-                                <li>• <strong>맞춤 브랜딩:</strong> 상품 카탈로그 대신 최고급 재질의 맞춤 인사말 동봉.</li>
-                                <li>• <strong>RP 제공:</strong> 각 선물 전달 시 활용할 최적의 영업 멘트(RP) 큐레이션.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="bg-brand-900/30 p-4 rounded-lg border border-brand-800/50">
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="text-2xl">🤖</span>
-                                <h4 class="font-bold text-white">AI 보험 영업 코치 시뮬레이터 (V017)</h4>
-                            </div>
-                            <p class="text-xs text-slate-400">ai.studio 기반 구축. 다양한 고객 거절 상황에 대한 논리적 대응 화법(RP) 학습 및 머신러닝 피드백 지원.</p>
-                        </div>
-                        <div class="bg-brand-900/30 p-4 rounded-lg border border-brand-800/50">
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="text-2xl">🏥</span>
-                                <h4 class="font-bold text-white">CancerCare Master (V008)</h4>
-                            </div>
-                            <p class="text-xs text-slate-400">현대해상 '알려줘 시리즈' 등 전문 의학 데이터를 프로세스화. 암 진단부터 치료까지 고객 눈높이 설명 및 맞춤 설계 툴.</p>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                <h4 class="text-sm font-bold text-white mb-1">수술분류검색기</h4>
-                                <p class="text-[10px] text-slate-400">질병코드 입력 시 수백 장 약관 스캔, 1~5종/1~7종 수술비 즉시 도출 (신한라이프 V002 모델 적용)</p>
-                            </div>
-                            <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                                <h4 class="text-sm font-bold text-white mb-1">실손 세대별 분석기</h4>
-                                <p class="text-[10px] text-slate-400">1~4세대 실손 비교 시각화. 착한 실손 전환 가입 유불리 자동 계산.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab Content 3: MyFC Platform -->
-            <div id="content-myfc" class="tab-content hidden animate-[fadeIn_0.5s_ease-in-out]">
-                 <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <div class="inline-block bg-gold-500 text-slate-900 text-xs font-black px-2 py-1 rounded mb-4">공격형 인프라</div>
-                        <h3 class="text-2xl font-bold text-white mb-4">금소법을 완벽히 우회하는<br>리뷰 기반 매칭 플랫폼 [MyFC.kr]</h3>
-                        <p class="mb-6 text-sm leading-relaxed">
-                            기존 인슈어테크의 불법 '수수료 쉐어' 구조를 타파했습니다. MyFC는 상품이 아닌 **'설계사(인물) 광고 플랫폼'**으로 정의됩니다. 상담과 계약은 플랫폼 외부에서 이루어지며, 플랫폼은 오직 합법적인 광고비(RTB, CPC) 수익만 창출합니다.
-                        </p>
-                        
-                        <div class="space-y-4 text-sm">
-                            <div class="flex gap-3">
-                                <span class="text-green-400">✓</span>
-                                <div><strong class="text-white">전문성 기반 필터링:</strong> 지역, 주력 회사, 대면/화상 등 니즈 맞춤 검색</div>
-                            </div>
-                            <div class="flex gap-3">
-                                <span class="text-green-400">✓</span>
-                                <div><strong class="text-white">바이럴 루프 (자정 작용):</strong> 기존 고객 리뷰 작성 시 블라인드 노출. 불량 설계사 매너온도 하락 및 퇴출 시스템.</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Platform UI Mock -->
-                    <div class="bg-slate-100 p-4 rounded-2xl shadow-2xl transform rotate-1 border-4 border-slate-300">
-                        <div class="bg-white rounded-xl overflow-hidden shadow">
-                            <div class="bg-brand-600 text-white text-center py-3 font-bold text-sm">
-                                🔍 내게 맞는 보험 주치의 찾기
-                            </div>
-                            <div class="p-4 bg-slate-50 border-b border-slate-200">
-                                <div class="bg-white p-2 rounded border border-gold-400 shadow-sm relative mb-3">
-                                    <div class="absolute -top-2 -right-2 bg-gold-500 text-white text-[10px] font-bold px-1 rounded">RTB 1위 낙찰</div>
-                                    <div class="flex gap-3 items-center">
-                                        <div class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center text-lg">👩‍💼</div>
-                                        <div class="text-slate-800 text-sm">
-                                            <div class="font-bold">김지영 대표 (MDRT)</div>
-                                            <div class="text-xs text-slate-500">종신/연금 전문 • 강남구</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-white p-2 rounded border border-slate-200 shadow-sm relative">
-                                    <div class="absolute -top-2 -right-2 bg-slate-700 text-white text-[10px] font-bold px-1 rounded">CPC (클릭당 1만)</div>
-                                    <div class="flex gap-3 items-center opacity-80 filter blur-[1px] hover:blur-none transition-all cursor-pointer">
-                                        <div class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center text-lg">❓</div>
-                                        <div class="text-slate-800 text-sm">
-                                            <div class="font-bold text-brand-600">블라인드 극찬 후기 노출</div>
-                                            <div class="text-xs text-slate-500">"정말 양심적으로 설계해주셨어요..."</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                 </div>
-            </div>
+    <section id="projects" class="bento-grid">
+        <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="num">01</div>
+            <h2>신뢰 기반 매칭, MyFC</h2>
+            <p>상품 중심의 낡은 광고를 버리세요. 검증된 데이터와 실제 후기만을 바탕으로 작동하는 최상위 매칭 플랫폼입니다.</p>
+            <a href="myfc.html" style="color:var(--accent-blue); font-weight:700;">MyFC 자세히 보기 →</a>
+        </div>
+        <div class="glass-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="num">02</div>
+            <h2>엔터프라이즈급 전산 개발</h2>
+            <p>수만 명 규모의 수당 계산, DB 연동, AI 기반 알고리즘. 완벽한 금융 규제 준수와 압도적인 퍼포먼스를 제공합니다.</p>
+            <a href="enterprise.html" style="color:var(--accent-blue); font-weight:700;">전산 개발 알아보기 →</a>
+        </div>
+        <div class="glass-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="num">03</div>
+            <h2>인텔리전트 영업 지원</h2>
+            <p>"설계사님은 높은 소득에만 집중하십시오." 번거로운 행정 처리부터 맞춤형 메시지 발송까지 시스템이 대행합니다.</p>
+            <a href="intelligent_sales.html" style="color:var(--accent-blue); font-weight:700;">영업 지원 확인하기 →</a>
         </div>
     </section>
 
-    <!-- Tax Leverage Strategy (Interactive) -->
-    <section id="tax-leverage" class="py-20 bg-brand-50 relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-white skew-x-12 translate-x-32 hidden lg:block opacity-50 pointer-events-none"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-brand-600 font-bold tracking-wider text-sm uppercase">Tax Strategy</span>
-                <h2 class="text-3xl font-black text-slate-900 mt-2 mb-4">본 비즈니스의 가장 강력한 무기,<br>비용의 레버리지 효과</h2>
-                <p class="text-slate-600">
-                    면세 사업자인 보험설계사는 부가가치세 환급이 불가능한 대신, <strong>공급가액과 부가세를 합산한 총 지출액 전액을 '종합소득세 필요경비'로 인정</strong>받습니다. 더리치랩 (주) 서비스 구독이 어떻게 막대한 세금을 방어하는지 직접 확인하십시오.
-                </p>
+    <section id="contact" class="contact-section" data-aos="fade-up">
+        <h2>프로젝트 상담 요청</h2>
+        <p style="color:var(--text-sub); margin-bottom:40px;">더리치랩과 함께 새로운 금융의 미래를 설계하십시오.</p>
+        
+        <div class="form-container">
+            <div id="success-message" style="display: none; padding: 20px; background: #E0F2FE; color: var(--primary-blue); border-radius: 15px; margin-bottom: 20px; font-weight: 700; text-align: center; border: 1px solid rgba(37,99,235,0.2);">
+                상담 신청이 성공적으로 접수되었습니다!<br>담당자가 확인 후 곧 연락드리겠습니다.
+            </div>
+            <div id="error-message" style="display: none; padding: 20px; background: #FEE2E2; color: #991B1B; border-radius: 15px; margin-bottom: 20px; font-weight: 700; text-align: center;">
+                전송 중 오류가 발생했습니다. 다시 시도해주세요.
             </div>
 
-            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-                <div class="grid lg:grid-cols-5">
-                    <!-- Calculator Inputs -->
-                    <div class="lg:col-span-2 bg-slate-900 p-8 text-white flex flex-col justify-center">
-                        <h3 class="text-xl font-bold mb-8 flex items-center gap-2">
-                            <span>🧮</span> 조세 방어 시뮬레이터
-                        </h3>
-                        
-                        <div class="space-y-8">
-                            <div>
-                                <label class="block text-sm font-bold text-slate-300 mb-2">1. 직전 연도 수입금액 (과세표준 구간)</label>
-                                <select id="tax-bracket" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white focus:outline-none focus:border-brand-500 font-bold">
-                                    <option value="0.264">8,800만원 이하 (세율 26.4%)</option>
-                                    <option value="0.385" selected>1.5억원 이하 (세율 38.5%)</option>
-                                    <option value="0.418">3억원 이하 (세율 41.8%)</option>
-                                    <option value="0.440">5억원 이하 (세율 44.0%)</option>
-                                    <option value="0.462">10억원 이하 (세율 46.2%)</option>
-                                    <option value="0.495">10억원 초과 (최고세율 49.5%)</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-bold text-slate-300 mb-2">2. 더리치랩 (주) 서비스 구독 플랜</label>
-                                <select id="sub-plan" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white focus:outline-none focus:border-brand-500 font-bold">
-                                    <option value="3600000">베이직 플랜 (연 360만 원)</option>
-                                    <option value="6000000">스탠다드 플랜 (연 600만 원)</option>
-                                    <option value="12000000">프리미엄 플랜 (연 1,200만 원)</option>
-                                    <option value="30000000" selected>VIP 법인/조직 플랜 (연 3,000만 원 지출 가정)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-8">
-                            * 지방소득세 10%가 포함된 한계세율을 단순 적용한 시뮬레이션이며, 실제 세금은 각종 소득공제에 따라 달라질 수 있습니다. (비앤엘세무회계 자문 기준)
-                        </p>
-                    </div>
-
-                    <!-- Calculator Outputs -->
-                    <div class="lg:col-span-3 p-8 lg:p-12">
-                        <div class="space-y-6">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-4">
-                                <span class="text-slate-600 font-bold">연간 서비스 결제액 (필요경비 인정액)</span>
-                                <span class="text-2xl font-black text-slate-900" id="calc-expense">30,000,000 원</span>
-                            </div>
-                            
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-3 pt-3">
-                                <div>
-                                    <span class="text-red-600 font-bold block">① 종합소득세 절감액</span>
-                                    <span class="text-xs text-slate-500">결제액 × 종소세 한계세율 (<span id="calc-rate">41.8</span>%)</span>
-                                </div>
-                                <span class="text-2xl font-black text-red-600">- <span id="calc-tax-saved">12,540,000</span> 원</span>
-                            </div>
-
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-3 pt-3">
-                                <div>
-                                    <span class="text-teal-600 font-bold block">② 건강보험료 절감액 (예상)</span>
-                                    <span class="text-xs text-slate-500">소득 감소분 × 건보료율 (약 8.0%)</span>
-                                </div>
-                                <span class="text-2xl font-black text-teal-600">- <span id="calc-health-saved">2,400,000</span> 원</span>
-                            </div>
-
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-4 pt-4 bg-gold-50 px-4 rounded-lg">
-                                <span class="text-gold-700 font-bold text-lg">총 절감액 (① + ②)</span>
-                                <span class="text-3xl font-black text-gold-600">- <span id="calc-total-saved">14,940,000</span> 원</span>
-                            </div>
-
-                            <div class="flex justify-between items-center pt-6">
-                                <span class="text-slate-900 font-black text-lg">실질적 연간 서비스 이용 비용</span>
-                                <span class="text-4xl font-black text-brand-600" id="calc-real">15,060,000 원</span>
-                            </div>
-                        </div>
-
-                        <div class="mt-8 bg-brand-50 border border-brand-200 p-6 rounded-xl relative">
-                            <div class="absolute -top-3 -left-3 text-3xl">💡</div>
-                            <h4 class="font-bold text-brand-900 mb-2 pl-4">결론: 세테크(Tax-tech)의 완성</h4>
-                            <p class="text-sm text-slate-700 leading-relaxed pl-4">
-                                국세청과 건보공단에 납부하여 <strong class="text-gold-600">허공에 사라질 금액 <span id="text-saved">1,494만 원</span></strong>을 더리치랩 (주)에 투자함으로써, 실질적으로는 <strong><span id="text-real">1,506만 원</span>의 비용만 부담</strong>하고 최고급 비서 시스템, CRM, 그리고 플랫폼 노출 효과까지 모두 누리게 됩니다. 체감 할인율은 <span id="text-rate" class="font-bold">49.8%</span>에 달합니다.
-                            </p>
-                        </div>
-                    </div>
+            <form id="contact-form" action="https://formspree.io/f/xdajdpwj" method="POST">
+                <div class="input-group">
+                    <label>성함 / 기업명</label>
+                    <input type="text" name="name" placeholder="홍길동 / (주)더리치랩" required>
                 </div>
-            </div>
+                <div class="input-group">
+                    <label>연락처</label>
+                    <input type="tel" name="phone" placeholder="010-0000-0000" required>
+                </div>
+                <div class="input-group">
+                    <label>관심 분야</label>
+                    <select name="interest" required>
+                        <option value="">선택해주세요</option>
+                        <option value="MyFC 입점/광고 문의">MyFC 입점/광고 문의</option>
+                        <option value="전산/시스템 구축 의뢰">전산/시스템 구축 의뢰</option>
+                        <option value="영업 지원 시스템 도입">영업 지원 시스템 도입</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>문의 내용</label>
+                    <textarea name="message" rows="4" placeholder="궁금하신 점을 자유롭게 남겨주세요." required></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 20px; font-size: 18px;">상담 신청하기</button>
+            </form>
+            <p id="security-notice" style="font-size: 13px; color: #999; margin-top: 15px; text-align: center;">* 입력하신 정보는 안전하게 암호화되어 전송됩니다.</p>
         </div>
     </section>
+</main>
 
-    <!-- Financials & Risk Management Section -->
-    <section id="financials" class="py-20 bg-white border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div>
-                    <h2 class="text-3xl font-black text-slate-900 mb-4">다각화된 캐시카우 및 리스크 헤지</h2>
-                    <p class="text-slate-600 mb-8">
-                        플랫폼의 성장이 곧바로 수익의 기하급수적 증가로 이어지는 구조이며, 단일 수익원에 의존하지 않는 견고한 재무 펀더멘털을 자랑합니다.
-                    </p>
-
-                    <div class="space-y-6">
-                        <div class="flex gap-4">
-                            <div class="w-1.5 bg-brand-500 rounded-full"></div>
-                            <div>
-                                <h4 class="font-bold text-slate-900">안정적인 구독 매출 (ARR)</h4>
-                                <p class="text-sm text-slate-600">서울/수도권 VIP 설계사 500명 확보 시 연 30억 원 반복 매출.</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="w-1.5 bg-gold-500 rounded-full"></div>
-                            <div>
-                                <h4 class="font-bold text-slate-900">플랫폼 트래픽 과금 (RTB/CPC)</h4>
-                                <p class="text-sm text-slate-600">MyFC 실시간 배너 경매 및 클릭당 1만 원 과금. 경쟁 심리에 의한 단가 무한 상승 구조.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- REQUIRED CHART CONTAINER -->
-                <div class="chart-container">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-            </div>
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="#">회사소개</a>
+            <a href="#">이용약관</a>
+            <a href="#" class="privacy">개인정보처리방침</a>
+            <a href="#">고객센터</a>
         </div>
-    </section>
-
-    <!-- Marketing & Infrastructure Strategy -->
-    <section class="py-16 bg-slate-900 text-slate-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-700">
-                <div class="px-4">
-                    <div class="text-3xl mb-2">🏢</div>
-                    <h4 class="font-bold text-white text-sm mb-1">인프라 거점</h4>
-                    <p class="text-xs text-slate-400">WeWork 삼성역 1호점<br>유연한 오피스 확장</p>
-                </div>
-                <div class="px-4">
-                    <div class="text-3xl mb-2">☁️</div>
-                    <h4 class="font-bold text-white text-sm mb-1">데이터베이스</h4>
-                    <p class="text-xs text-slate-400">카페24 엔터프라이즈 API<br>ISMS 가이드라인 준수</p>
-                </div>
-                <div class="px-4">
-                    <div class="text-3xl mb-2">📊</div>
-                    <h4 class="font-bold text-white text-sm mb-1">투명한 회계/노무</h4>
-                    <p class="text-xs text-slate-400">비앤엘세무회계 파트너십<br>법률/노무 리스크 제로화</p>
-                </div>
-                <div class="px-4">
-                    <div class="text-3xl mb-2">📺</div>
-                    <h4 class="font-bold text-white text-sm mb-1">합법적 마케팅</h4>
-                    <p class="text-xs text-slate-400">MyFC.kr<br>플랫폼 기반 트래픽 유입</p>
-                </div>
-            </div>
+        
+        <div class="footer-info">
+            <span class="company-name">더리치랩(주)</span><br>
+            <span>대표이사 : 박영진</span>
+            <span>주소 : 서울특별시 강남구 테헤란로 507, 8층 131호</span><br>
+            <span>사업자등록번호 : 762-88-02797 <a href="http://www.ftc.go.kr/bizCommPop.do?wrkr_no=7628802797" target="_blank" style="color:#60A5FA; text-decoration:none; font-size:13px; margin-left: 5px;">사업자 정보확인 ↗</a></span>
+            <span>통신판매업신고 : 제 2025-서울강남-06308호</span><br>
+            <span>대표번호 : 010-9941-2899</span>
+            <span>E-mail : myfc.helpdesk@gmail.com</span>
+            <span>호스팅서비스사업자 : 카페24(주)</span>
         </div>
-    </section>
-
-    <!-- Footer / CTA -->
-    <footer id="contact" class="bg-white pt-24 pb-12 border-t border-slate-200 text-center">
-        <div class="max-w-4xl mx-auto px-4">
-            <h2 class="text-4xl font-black text-slate-900 mb-6">대한민국 40만 보험 시장의<br>새로운 패러다임이 열립니다</h2>
-            <p class="text-slate-600 mb-10 text-lg">
-                상위 1% 고능률 설계사들의 절대적인 지지를 받는 B2B 생태계.<br>
-                더리치랩 (주)과 함께 압도적인 성장을 경험할 VIP 파트너를 모십니다.
-            </p>
-            
-            <button class="bg-brand-600 hover:bg-brand-700 text-white px-10 py-4 rounded-lg font-bold text-xl transition-all shadow-xl hover:shadow-brand-500/30 mb-16">
-                파트너십 및 도입 문의
-            </button>
-
-            <div class="border-t border-slate-200 pt-8 text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-left">
-                    <strong class="text-slate-800 text-base">더리치랩 주식회사</strong><br>
-                    사업 영역: 보험설계사 프리미엄 BPO, CRM 솔루션, MyFC 플랫폼<br>
-                    인프라 파트너: WeWork 삼성 1호점, 비앤엘세무회계
-                </div>
-                <div class="text-right">
-                    © 2026 The Rich Lab Co., Ltd. All rights reserved.<br>
-                    <span class="text-xs">본 사업계획서는 금소법 등 법률 검토를 마친 기밀 자료입니다.</span>
-                </div>
-            </div>
+        
+        <div class="footer-disclaimer">
+            본 사이트(MyFC 포함)는 데이터 중심 보험 설계사 매칭 플랫폼(통신판매중개)으로, 통신판매의 당사자가 아닙니다. 
+            따라서 개별 설계사가 등록한 상품 정보, 상담 및 거래에 대하여 (주)더리치랩은 일체의 법적 책임을 지지 않습니다. 
+            <a href="#" style="color:#9CA3AF; text-decoration:underline;">소비자분쟁해결기준</a>
         </div>
-    </footer>
+        
+        <div class="footer-copyright">
+            Copyright © 2026 TheRichLab Corp. All Rights Reserved.
+        </div>
+    </div>
+</footer>
 
-    <!-- JavaScript Logic -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- Tab Switching Logic ---
-            window.switchPillar = function(tabId) {
-                const tabs = document.querySelectorAll('.tab-btn');
-                const contents = document.querySelectorAll('.tab-content');
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ once: false });
 
-                tabs.forEach(tab => {
-                    tab.classList.remove('active', 'bg-slate-800', 'text-white', 'border-b-0');
-                    tab.classList.add('text-slate-400', 'bg-slate-800', 'border-slate-700');
-                    if(tab.id === 'btn-' + tabId) {
-                        tab.classList.remove('text-slate-400', 'bg-slate-800');
-                        tab.classList.add('active', 'border-b-0');
-                    }
-                });
+    const particleContainer = document.getElementById('particles');
+    for(let i=0; i<15; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.width = Math.random() * 50 + 20 + 'px';
+        p.style.height = p.style.width;
+        p.style.animationDelay = Math.random() * 10 + 's';
+        p.style.animationDuration = Math.random() * 10 + 15 + 's';
+        particleContainer.appendChild(p);
+    }
 
-                contents.forEach(content => {
-                    content.classList.add('hidden');
-                    content.classList.remove('block');
-                });
+    const phoneInput = document.querySelector('input[name="phone"]');
+    phoneInput.addEventListener('focus', function() {
+        if (!this.value) { this.value = '010-'; }
+    });
 
-                const activeContent = document.getElementById('content-' + tabId);
-                activeContent.classList.remove('hidden');
-                activeContent.classList.add('block');
-            };
+    phoneInput.addEventListener('input', function(e) {
+        let val = this.value.replace(/[^0-9]/g, '');
+        if (val.length < 3) { val = '010'; 
+        } else if (!val.startsWith('010')) { val = '010' + val.substring(3); }
 
-            // --- Tax Leverage Calculator Logic ---
-            const selectBracket = document.getElementById('tax-bracket');
-            const selectPlan = document.getElementById('sub-plan');
-            
-            const displayExpense = document.getElementById('calc-expense');
-            const displayRate = document.getElementById('calc-rate');
-            const displayTaxSaved = document.getElementById('calc-tax-saved');
-            const displayHealthSaved = document.getElementById('calc-health-saved');
-            const displayTotalSaved = document.getElementById('calc-total-saved');
-            const displayReal = document.getElementById('calc-real');
-            
-            const textSaved = document.getElementById('text-saved');
-            const textReal = document.getElementById('text-real');
-            const textRate = document.getElementById('text-rate');
+        if (val.length <= 3) { this.value = val;
+        } else if (val.length <= 7) { this.value = val.substring(0, 3) + '-' + val.substring(3);
+        } else { this.value = val.substring(0, 3) + '-' + val.substring(3, 7) + '-' + val.substring(7, 11); }
+    });
 
-            const HEALTH_INSURANCE_RATE = 0.08; // 약 8% 가정 (건강보험료 + 장기요양보험료)
+    phoneInput.addEventListener('blur', function() {
+        if (this.value === '010' || this.value === '010-') { this.value = ''; }
+    });
 
-            function updateCalculator() {
-                const taxRate = parseFloat(selectBracket.value);
-                const expense = parseInt(selectPlan.value);
-                
-                const taxSaved = expense * taxRate;
-                const healthSaved = expense * HEALTH_INSURANCE_RATE;
-                const totalSaved = taxSaved + healthSaved;
-                const real = expense - totalSaved;
-                const effectiveDiscountRate = (totalSaved / expense) * 100;
+    const contactForm = document.getElementById('contact-form');
+    const successMsg = document.getElementById('success-message');
+    const errorMsg = document.getElementById('error-message');
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const securityNotice = document.getElementById('security-notice');
 
-                // Format numbers
-                displayExpense.textContent = expense.toLocaleString() + ' 원';
-                displayRate.textContent = (taxRate * 100).toFixed(1);
-                displayTaxSaved.textContent = taxSaved.toLocaleString();
-                displayHealthSaved.textContent = healthSaved.toLocaleString();
-                displayTotalSaved.textContent = totalSaved.toLocaleString();
-                displayReal.textContent = real.toLocaleString() + ' 원';
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault(); 
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '전송 중...';
+        errorMsg.style.display = 'none'; 
 
-                // Update text summary
-                textSaved.textContent = (totalSaved / 10000).toLocaleString() + '만 원';
-                textReal.textContent = (real / 10000).toLocaleString() + '만 원';
-                textRate.textContent = effectiveDiscountRate.toFixed(1) + '%';
-            }
+        const data = new FormData(contactForm);
 
-            selectBracket.addEventListener('change', updateCalculator);
-            selectPlan.addEventListener('change', updateCalculator);
-            updateCalculator(); // Init
-
-            // --- Chart.js Implementation (Revenue Streams) ---
-            const ctx = document.getElementById('revenueChart').getContext('2d');
-            
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['비서/CRM 구독 (ARR)', 'MyFC 광고 (RTB/CPC)', '기타 파트너십'],
-                    datasets: [{
-                        data: [55, 40, 5],
-                        backgroundColor: [
-                            '#3b82f6', // brand-500
-                            '#f59e0b', // gold-500
-                            '#cbd5e1'  // slate-300
-                        ],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // Critical for CSS chart-container
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                font: {
-                                    family: "'Pretendard', sans-serif",
-                                    size: 13
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleFont: { family: "'Pretendard', sans-serif" },
-                            bodyFont: { family: "'Pretendard', sans-serif", size: 14 },
-                            padding: 12,
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.label + ': ' + context.parsed + '% (목표 비중)';
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
-                    }
-                },
-                // Custom plugin to add text in the center
-                plugins: [{
-                    id: 'textCenter',
-                    beforeDraw: function(chart) {
-                        var width = chart.width,
-                            height = chart.height,
-                            ctx = chart.ctx;
-
-                        ctx.restore();
-                        var fontSize = (height / 160).toFixed(2);
-                        ctx.font = "bold " + fontSize + "em Pretendard";
-                        ctx.textBaseline = "middle";
-                        ctx.fillStyle = "#0f172a";
-
-                        var text = "수익 모델",
-                            textX = Math.round((width - ctx.measureText(text).width) / 2),
-                            textY = (height / 2) - 15;
-
-                        ctx.fillText(text, textX, textY);
-                        
-                        ctx.font = "normal " + (fontSize * 0.6).toFixed(2) + "em Pretendard";
-                        ctx.fillStyle = "#64748b";
-                        var text2 = "다각화 포트폴리오",
-                            text2X = Math.round((width - ctx.measureText(text2).width) / 2),
-                            text2Y = (height / 2) + 15;
-                        ctx.fillText(text2, text2X, text2Y);
-                        ctx.save();
-                    }
-                }]
+        try {
+            const response = await fetch(contactForm.action, {
+                method: 'POST', body: data, headers: { 'Accept': 'application/json' }
             });
-        });
-    </script>
+            if (response.ok) {
+                contactForm.style.display = 'none'; 
+                securityNotice.style.display = 'none';
+                successMsg.style.display = 'block'; 
+            } else {
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '상담 신청하기';
+            }
+        } catch (error) {
+            errorMsg.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '상담 신청하기';
+        }
+    });
+</script>
 </body>
 </html>
